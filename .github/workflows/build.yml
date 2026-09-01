@@ -36,15 +36,15 @@ jobs:
 
       - name: Build (Linux)
         if: matrix.os == 'ubuntu-latest'
-        run: npx electron-builder --linux AppImage
+        run: npx electron-builder --linux AppImage --publish never
 
       - name: Build (Windows)
         if: matrix.os == 'windows-latest'
-        run: npx electron-builder --win nsis portable
+        run: npx electron-builder --win nsis portable --publish never
 
       - name: Build (macOS)
         if: matrix.os == 'macos-latest'
-        run: npx electron-builder --mac dmg
+        run: npx electron-builder --mac dmg --publish never
         # Unsigned build — macOS will show an "unidentified developer"
         # warning on first launch (right-click > Open to bypass). Add
         # CSC_LINK / CSC_KEY_PASSWORD secrets here if you have an Apple
