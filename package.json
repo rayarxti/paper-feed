@@ -1,0 +1,32 @@
+{
+  "name": "paper-feed",
+  "version": "1.0.0",
+  "description": "Desktop daily academic paper digest with local RAG search over arXiv, PubMed, and Semantic Scholar",
+  "main": "main.js",
+  "author": "you",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder",
+    "dist:linux": "electron-builder --linux",
+    "dist:mac": "electron-builder --mac",
+    "dist:win": "electron-builder --win"
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.0",
+    "fast-xml-parser": "^4.4.1"
+  },
+  "devDependencies": {
+    "electron": "^31.0.0",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.paperfeed.app",
+    "productName": "Paper Feed",
+    "files": ["main.js", "preload.js", "src/**/*", "renderer/**/*"],
+    "extraResources": [{ "from": "config.yaml", "to": "config.yaml" }],
+    "linux": { "target": ["AppImage"], "category": "Utility" },
+    "mac": { "target": ["dmg"] },
+    "win": { "target": ["nsis", "portable"] }
+  }
+}

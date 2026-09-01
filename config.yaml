@@ -1,0 +1,44 @@
+# Paper Feed — configuration
+#
+# This is the ONLY place customization happens — there's no "add topic"
+# button in the app on purpose. Edit this file whenever you like, then
+# click "Reload config" in the app (or just restart it).
+#
+# NOTE: the app reads its *working copy* of this file from your user data
+# folder, not from wherever the app itself is installed — use the "Open
+# config folder" button in the app to find it. The copy bundled with the
+# app is only the starting default, used the very first time you run it.
+
+topics:
+  - name: "LLMs and Alzheimer's"
+    description: >
+      Applications of large language models and NLP to Alzheimer's disease
+      and related dementia research: early diagnosis from speech or writing
+      samples, cognitive decline modeling, clinical note analysis, caregiver
+      support tools, and drug-discovery support.
+    keywords:
+      - "large language models Alzheimer's disease"
+      - "LLM dementia diagnosis"
+      - "NLP cognitive decline detection"
+      - "speech analysis early Alzheimer's"
+
+  # Add more topics by copying the block above, e.g.:
+  # - name: "Protein folding"
+  #   description: >
+  #     Structure prediction and generative modeling for protein folding,
+  #     including diffusion and language-model approaches.
+  #   keywords:
+  #     - "protein structure prediction deep learning"
+  #     - "protein folding diffusion model"
+
+sources:
+  arxiv: true              # preprints — cs, q-bio, physics, stats, etc.
+  pubmed: true              # peer-reviewed biomedical literature
+  semantic_scholar: true    # broad coverage of journals + conference papers
+
+papers_per_topic_per_source: 6   # candidates to pull per source, per topic, per fetch
+lookback_days: 3                  # how far back "recent" reaches on each fetch
+relevance_threshold: 0.06         # min TF-IDF cosine similarity to keep a candidate (see README — tune this)
+fetch_interval_hours: 24          # background auto-refresh cadence; 0 disables the scheduler
+
+anthropic_model: "claude-sonnet-4-6"

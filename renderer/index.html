@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Paper Feed</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <div class="titlebar">
+      <h1>Paper Feed</h1>
+      <span class="muted" id="config-hint">topics live in config.yaml</span>
+    </div>
+    <div class="toolbar">
+      <button id="refresh-all-btn">Refresh all topics</button>
+      <button id="reload-config-btn" class="secondary">Reload config</button>
+      <button id="open-folder-btn" class="secondary">Open config folder</button>
+      <span class="status" id="status-label">Starting up…</span>
+    </div>
+  </header>
+
+  <nav id="tabs"></nav>
+
+  <main id="panels"></main>
+
+  <script src="renderer.js"></script>
+</body>
+</html>
