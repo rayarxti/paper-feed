@@ -1,0 +1,60 @@
+# Builds real, native installers for Windows, macOS, and Linux — each on
+# its own OS runner, which is the only reliable way to produce them (no
+# cross-compilation hacks, no Wine).
+#
+# Usage:
+#   1. Push this repo to GitHub.
+#   2. Go to the "Actions" tab and run this workflow manually (or push a
+#      tag like "v1.0.0" — see the trigger below), or just push to main.
+#   3. Download the built installers from the workflow run's "Artifacts".
+#
+# No Anthropic API key or secrets are needed to build — the key is only
+# needed at runtime, on the machine the app actually runs on.
+
+name: Build desktop app
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  workflow_dispatch: {}
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm ci
+
+      - name: Build (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: npx electron-builder --linux AppImage
+
+      - name: Build (Windows)
+        if: matrix.os == 'windows-latest'
+        run: npx electron-builder --win nsis portable
+
+      - name: Build (macOS)
+        if: matrix.os == 'macos-latest'
+        run: npx electron-builder --mac dmg
+        # Unsigned build — macOS will show an "unidentified developer"
+        # warning on first launch (right-click > Open to bypass). Add
+        # CSC_LINK / CSC_KEY_PASSWORD secrets here if you have an Apple
+        # Developer certificate and want a signed, warning-free build.
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: paper-feed-${{ matrix.os }}
+          path: |
+            dist/*.AppImage
+            dist/*.exe
+            dist/*.dmg
+          if-no-files-found: ignore
