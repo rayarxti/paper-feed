@@ -49,6 +49,16 @@ button.secondary:hover { background: transparent; border-color: var(--ink); colo
 button:disabled { opacity: 0.45; cursor: default; }
 button:disabled:hover { background: transparent; color: var(--ink); }
 
+.banner {
+  margin: 12px 28px 0;
+  padding: 10px 14px;
+  border: 1px solid #a4442f;
+  background: #f6e9e4;
+  color: #7a2f1d;
+  font-size: 13px;
+  border-radius: 3px;
+}
+
 nav#tabs {
   display: flex;
   gap: 6px;

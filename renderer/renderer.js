@@ -181,6 +181,16 @@ async function runSearch() {
   }
 }
 
+function renderOllamaBanner(ollama) {
+  const banner = document.getElementById("ollama-banner");
+  if (!ollama || ollama.ok) {
+    banner.style.display = "none";
+    return;
+  }
+  banner.style.display = "block";
+  banner.textContent = `⚠ ${ollama.reason}`;
+}
+
 async function reloadConfig() {
   statusEl.textContent = "Reloading config…";
   const res = await window.api.reloadConfig();
@@ -188,6 +198,7 @@ async function reloadConfig() {
   digestState = res.digestState;
   buildTabsAndPanels();
   renderAllTopics();
+  renderOllamaBanner(res.ollama);
   statusEl.textContent = `Config reloaded · doc space has ${res.paperCount} papers`;
 }
 
@@ -208,5 +219,6 @@ window.api.onDigestUpdate((data) => {
   configHint.textContent = `topics live in ${res.configPath}`;
   buildTabsAndPanels();
   renderAllTopics();
+  renderOllamaBanner(res.ollama);
   statusEl.textContent = `Ready · doc space has ${res.paperCount} papers`;
 })();

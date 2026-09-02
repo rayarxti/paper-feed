@@ -5,7 +5,7 @@ const fs = require("fs");
 const { loadConfig, openConfigFolder } = require("./src/config");
 const { DocStore } = require("./src/store");
 const { ingestTopic } = require("./src/pipeline");
-const { digestSummaries, answerQuery } = require("./src/summarizer");
+const { digestSummaries, answerQuery, checkOllama } = require("./src/summarizer");
 
 let cfg = null;
 let store = null;
@@ -38,7 +38,7 @@ async function refreshTopic(topic) {
   ensureTopicState(topic.name);
   const newPapers = await ingestTopic(topic, cfg, store);
   if (newPapers.length > 0) {
-    const { summaries, synthesis } = await digestSummaries(newPapers, cfg.anthropicModel);
+    const { summaries, synthesis } = await digestSummaries(newPapers, cfg.llm);
     const entries = newPapers.map((p) => ({
       paper: stripTokens(p),
       summary: summaries[p.id] || p.abstract.slice(0, 220) + "…",
@@ -82,19 +82,26 @@ function initState() {
 }
 
 // ------------------------------------------------------------------- IPC
-ipcMain.handle("get-config", () => ({
+ipcMain.handle("get-config", async () => ({
   topics: cfg.topics,
   configPath: cfg.configPath,
   digestState,
   paperCount: store.count(),
+  ollama: await checkOllama(cfg.llm),
 }));
 
-ipcMain.handle("reload-config", () => {
+ipcMain.handle("reload-config", async () => {
   cfg = loadConfig();
   store = new DocStore(app.getPath("userData"));
   initState();
   startScheduler();
-  return { topics: cfg.topics, configPath: cfg.configPath, digestState, paperCount: store.count() };
+  return {
+    topics: cfg.topics,
+    configPath: cfg.configPath,
+    digestState,
+    paperCount: store.count(),
+    ollama: await checkOllama(cfg.llm),
+  };
 });
 
 ipcMain.handle("open-config-folder", () => openConfigFolder());
@@ -115,7 +122,7 @@ ipcMain.handle("refresh-topic", async (_e, topicName) => {
 
 ipcMain.handle("search", async (_e, query, topicName) => {
   const hits = store.search(query, { topicName: topicName || null, k: 8 });
-  const answer = await answerQuery(query, hits, cfg.anthropicModel);
+  const answer = await answerQuery(query, hits, cfg.llm);
   return { answer, hits };
 });
 

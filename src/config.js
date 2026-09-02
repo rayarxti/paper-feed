@@ -40,7 +40,10 @@ function loadConfig() {
     lookbackDays: Number(raw.lookback_days ?? 3),
     relevanceThreshold: Number(raw.relevance_threshold ?? 0.06),
     fetchIntervalHours: Number(raw.fetch_interval_hours ?? 24),
-    anthropicModel: raw.anthropic_model || "claude-sonnet-4-6",
+    llm: {
+      host: raw.llm?.host || "http://localhost:11434",
+      model: raw.llm?.model || "llama3.1",
+    },
   };
 }
 

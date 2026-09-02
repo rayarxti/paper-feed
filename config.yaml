@@ -41,4 +41,8 @@ lookback_days: 3                  # how far back "recent" reaches on each fetch
 relevance_threshold: 0.06         # min TF-IDF cosine similarity to keep a candidate (see README — tune this)
 fetch_interval_hours: 24          # background auto-refresh cadence; 0 disables the scheduler
 
-anthropic_model: "claude-sonnet-4-6"
+# Local LLM via Ollama — nothing leaves your machine, no API key, no cost.
+# Install Ollama (ollama.com) and pull a model first: `ollama pull llama3.1`
+llm:
+  host: "http://localhost:11434"   # default Ollama address; change if yours runs elsewhere
+  model: "llama3.1"                 # try "llama3.2:3b" or "phi3" on lower-spec machines
